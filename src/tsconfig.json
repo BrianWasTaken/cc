@@ -1,0 +1,15 @@
+{
+    "extends": "../tsconfig.base.json",
+    "compilerOptions": {
+        "baseUrl": "./",
+        "module": "NodeNext",
+        "outDir": "dist",
+        "paths": {
+            "#bot/content/*": ["content/*"],
+            "#bot/database/*": ["database/*"],
+            "#bot/structures/*": ["structures/*"],
+            "#bot/utilities/*": ["utilities/*"]
+        },
+        "target": "ESNext"
+    }
+}

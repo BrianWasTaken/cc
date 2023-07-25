@@ -1,0 +1,61 @@
+{
+  "name": "cc",
+  "version": "1.0.0",
+  "description": "A discord bot designed to build an economy for discord servers.",
+  "main": "dist/src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --experimental-json-modules ./dist/src/index.js",
+    "build": "rimraf ./dist && tsc --project src/tsconfig.json",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrianWasTaken/cc.git"
+  },
+  "keywords": [
+    "discord-bot",
+    "economy",
+    "currency",
+    "discord-server",
+    "typescript",
+    "sapphire-framework"
+  ],
+  "author": "BrianWasTaken",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrianWasTaken/cc/issues"
+  },
+  "homepage": "https://github.com/BrianWasTaken/cc#readme",
+  "dependencies": {
+    "@sapphire/decorators": "^6.0.1",
+    "@sapphire/framework": "^4.5.0",
+    "@sapphire/plugin-hmr": "^2.0.1",
+    "@sapphire/plugin-subcommands": "^4.0.1",
+    "@sapphire/plugin-utilities-store": "^1.0.1",
+    "@typegoose/typegoose": "^11.4.0",
+    "dayjs": "^1.11.9",
+    "discord.js": "^14.11.0",
+    "dotenv-cra": "^3.0.3",
+    "mongoose": "^7.4.0"
+  },
+  "devDependencies": {
+    "@sapphire/prettier-config": "^1.4.5",
+    "@sapphire/ts-config": "^4.0.0",
+    "@types/node": "^20.4.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6"
+  },
+  "imports": {
+    "#bot/content/*": "./src/content/*",
+    "#bot/database/*": "./src/database/*",
+    "#bot/structures/*": "./src/structures/*",
+    "#bot/utilities/*": "./src/utilities/*"
+  },
+  "lint-staged": {
+    "*.{ts,md}": "prettier --write"
+  }
+}

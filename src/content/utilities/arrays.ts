@@ -13,9 +13,9 @@ export class ArrayUtilities extends Utility {
    * @template T The elements' types.
    * @returns The element.
    */
-  public getRandomElement<T>(arr: T[]) {
+  public getRandomElement = <T>(arr: T[]) => {
     return arr.at(Math.floor(Math.random() * arr.length))!;
-  }
+  };
 
   /**
    * Excludes specific element(s) from the source array.
@@ -24,9 +24,9 @@ export class ArrayUtilities extends Utility {
    * @template T The elements' types.
    * @returns The array.
    */
-  public filterElements<T>(arr: T[], elems: T[]): T[] {
+  public filterElements = <T>(arr: T[], elems: T[]): T[] => {
     return arr.filter((arrElem) => !elems.some((elem) => arrElem !== elem));
-  }
+  };
 
   /**
    * Shuffles the order of all elements of an array.
@@ -34,9 +34,9 @@ export class ArrayUtilities extends Utility {
    * @template T The elements' types.
    * @returns The array.
    */
-  public shuffleElements<T>(arr: T[]): T[] {
+  public shuffleElements = <T>(arr: T[]): T[] => {
     return arr.sort(() => Math.random() - 0.5);
-  }
+  };
 
   /**
    * Gets a certain amount of random elements from an array.
@@ -46,7 +46,11 @@ export class ArrayUtilities extends Utility {
    * @template T The elements' types.
    * @returns An array that contains random elements.
    */
-  public getRandomElements<T>(arr: T[], len = arr.length, unique = true): T[] {
+  public getRandomElements = <T>(
+    arr: T[],
+    len = arr.length,
+    unique = true,
+  ): T[] => {
     const elems: T[] = [];
 
     while (elems.length < len) {
@@ -57,7 +61,7 @@ export class ArrayUtilities extends Utility {
     }
 
     return elems;
-  }
+  };
 
   /**
    * Converts an array into a {@link Collection discord.js Collection}.
@@ -68,13 +72,13 @@ export class ArrayUtilities extends Utility {
    * @template Id The collections' keys' presumed type.
    * @returns The collection.
    */
-  public transformArrayToCollection<T, Id extends string | number>(
+  public transformArrayToCollection = <T, Id extends string | number>(
     arr: T[],
     prop: (value: T) => Id,
     collection = new Collection<Id, T>(),
-  ): Collection<Id, T> {
+  ): Collection<Id, T> => {
     return arr.reduce((col, elem) => col.set(prop(elem), elem), collection);
-  }
+  };
 
   /**
    * Retrieves the amount of duplicates an element has within an array.
@@ -83,9 +87,9 @@ export class ArrayUtilities extends Utility {
    * @template T The elements' type.
    * @returns The amount of dupes the element has.
    */
-  public retrieveCommonElementsLength<T>(arr: T[], elem: T): number {
+  public retrieveCommonElementsLength = <T>(arr: T[], elem: T): number => {
     return arr.filter((el) => el === elem).length;
-  }
+  };
 
   /**
    * Inserts an element into the target array.
@@ -94,10 +98,10 @@ export class ArrayUtilities extends Utility {
    * @template T The elements' type.
    * @returns The element inserted.
    */
-  public insertElement<T>(arr: T[], elem: T): T {
+  public insertElement = <T>(arr: T[], elem: T): T => {
     arr.push(elem);
     return elem;
-  }
+  };
 
   /**
    * Extracts an element that passes a filter.
@@ -106,15 +110,15 @@ export class ArrayUtilities extends Utility {
    * @template T The elements' type.
    * @returns The element that passed the filter, or `null`.
    */
-  public extractElement<T>(
+  public extractElement = <T>(
     arr: T[],
     filter: FirstArgument<T[]["findIndex"]>,
-  ): T | null {
+  ): T | null => {
     const index = arr.findIndex(filter);
     const removed = arr.splice(index, index === -1 ? 0 : 1);
 
     return removed.at(0) ?? null;
-  }
+  };
 }
 
 export namespace ArrayUtilities {
@@ -123,6 +127,6 @@ export namespace ArrayUtilities {
 
 declare module "@sapphire/plugin-utilities-store" {
   interface Utilities {
-    [ArrayUtilities.Name]: ArrayUtilities;
+    [ArrayUtilities.Name]: Omit<ArrayUtilities, keyof Utility>;
   }
 }

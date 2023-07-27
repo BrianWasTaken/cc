@@ -35,6 +35,7 @@
     "@sapphire/plugin-utilities-store": "^1.0.1",
     "@sapphire/result": "^2.6.4",
     "@sapphire/snowflake": "^3.5.1",
+    "@sapphire/utilities": "^3.13.0",
     "@typegoose/typegoose": "^11.4.0",
     "dayjs": "^1.11.9",
     "discord.js": "^14.11.0",

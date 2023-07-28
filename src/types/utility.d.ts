@@ -6,7 +6,7 @@ import type { Awaitable } from "discord.js";
  * @template A The arguments of the callback.
  * @template R The callback's supposed return type.
  */
-type Callback<A extends unknown[], R> = (...args: A) => R;
+type CreateFunctionType<A extends unknown[], R> = (...args: A) => R;
 
 /**
  * Returns the type of piece a sapphire store handles.
@@ -23,3 +23,20 @@ type ReturnStorePieceType<S> = S extends Store<infer P> | AliasStore<infer P>
 type ReturnPromiseValue<P> = P extends Promise<infer V> | Awaitable<infer V>
   ? V
   : never;
+
+/**
+ * Represents a generic payload that contains a value.
+ * @template V The value's type.
+ */
+interface Payload<V> {
+  /**
+   * The containing value.
+   */
+  value: V;
+}
+
+/**
+ * Creates a generic object with a typed value.
+ * @template V The value's type.
+ */
+type CreatePayload<V> = Payload<V>;

@@ -167,35 +167,32 @@ export class StringUtilities extends Utility {
 
       if (isNullOrUndefined(firstVal)) throw new Error("Received empty array.");
 
-      let formatted: string;
+      let pads: [string, string];
 
       switch (align) {
         case StringUtilities.PaddedListAlignment.Left: {
-          formatted = valStr
-            .padStart(valStr.length + 1)
-            .padEnd(firstVal.length + 2);
+          pads = [valStr, firstVal];
           break;
         }
 
         case StringUtilities.PaddedListAlignment.Center: {
-          formatted = valStr
-            .padStart(firstVal.length + 1)
-            .padEnd(firstVal.length + 2);
+          pads = [firstVal, firstVal];
           break;
         }
 
         case StringUtilities.PaddedListAlignment.Right: {
-          formatted = valStr
-            .padStart(valStr.length + 1)
-            .padEnd(valStr.length + 2);
+          pads = [valStr, valStr];
           break;
         }
 
         default: {
-          formatted = value.toLocaleString();
+          pads = [firstVal, firstVal];
           break;
         }
       }
+
+      const [{ length: startPadLen }, { length: endPadLen }] = pads;
+      const formatted = valStr.padStart(startPadLen + 1).padEnd(endPadLen + 2);
 
       return { formatted, value };
     });
@@ -209,7 +206,7 @@ export class StringUtilities extends Utility {
    */
   public getRandomStrings = (string: string, length: number): string => {
     if (isNullOrUndefined(string)) throw new TypeError("Missing string.");
-    if (length < 1 || length > string.length)
+    if (Number.isNaN(length) || length < 1 || length > string.length)
       throw new RangeError("Invalid length.");
 
     return Array(length)

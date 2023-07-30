@@ -3,7 +3,7 @@
     "compilerOptions": {
         "baseUrl": "./",
         "module": "NodeNext",
-        "outDir": "dist",
+        "outDir": "../dist",
         "paths": {
             "#bot/content/*": ["content/*"],
             "#bot/database/*": ["database/*"],

@@ -14,6 +14,9 @@ export class ArrayUtilities extends Utility {
    * @returns The element.
    */
   public getRandomElement = <T>(arr: T[]) => {
+    if (!Array.isArray(arr)) throw new Error("Invalid array.");
+    if (!arr.length) throw new Error("Received empty array.");
+
     return arr.at(Math.floor(Math.random() * arr.length))!;
   };
 

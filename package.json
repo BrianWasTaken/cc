@@ -1,7 +1,7 @@
 {
-  "name": "cc",
+  "name": "tiles",
   "version": "1.0.0",
-  "description": "A discord bot designed to build an economy for discord servers.",
+  "description": "A chatbot designed to bring fun and exciting ways to play with buttons on Discord.",
   "main": "dist/src/index.js",
   "type": "module",
   "scripts": {
@@ -14,10 +14,10 @@
     "url": "git+https://github.com/BrianWasTaken/cc.git"
   },
   "keywords": [
+    "tiles",
     "discord-bot",
     "economy",
     "currency",
-    "discord-server",
     "typescript",
     "sapphire-framework"
   ],
@@ -59,6 +59,6 @@
     "#bot/utilities/*": "./src/utilities/*"
   },
   "lint-staged": {
-    "*.{ts,md}": "prettier --write"
+    "*.{ts,md,json}": "prettier --write"
   }
 }

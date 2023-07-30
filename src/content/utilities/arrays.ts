@@ -107,7 +107,7 @@ export class ArrayUtilities extends Utility {
   };
 
   /**
-   * Extracts an element that passes a filter.
+   * Returns the element that passes the filter and removes it from the array.
    * @param arr The source array.
    * @param filter The filter predicate.
    * @template T The elements' type.

@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node --experimental-json-modules ./dist/src/index.js",
     "build": "rimraf ./dist && tsc --project src/tsconfig.json",
+    "format": "prettier --config package.json --write .",
     "prepare": "husky install"
   },
   "repository": {
@@ -40,7 +41,8 @@
     "dayjs": "^1.11.9",
     "discord.js": "^14.11.0",
     "dotenv-cra": "^3.0.3",
-    "mongoose": "^7.4.0"
+    "mongoose": "^7.4.0",
+    "ts-mixer": "^6.0.3"
   },
   "devDependencies": {
     "@sapphire/prettier-config": "^1.4.5",

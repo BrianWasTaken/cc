@@ -3,9 +3,14 @@ import {
   StringSelectMenuInteraction,
   type ButtonInteraction,
   type ChatInputCommandInteraction,
-  type InteractionEditReplyOptions,
-  type InteractionReplyOptions,
 } from "discord.js";
+import {
+  Builder,
+  ComponentRowBuilder,
+  InteractionMessageBuilder,
+  UpdateInteractionMessageBuilder,
+} from "./builders";
+import { isFunction } from "@sapphire/utilities";
 
 /**
  * Supported responder targets.
@@ -18,9 +23,12 @@ export type ResponderTarget =
 /**
  * Supported responder content.
  */
-export type ResponderContent =
-  | InteractionReplyOptions
-  | InteractionEditReplyOptions;
+export type ResponderContent<
+  TComponents extends ComponentRowBuilder.ComponentTypes,
+> =
+  | string
+  | InteractionMessageBuilder<TComponents>
+  | Builder.Callback<InteractionMessageBuilder<TComponents>>;
 
 /**
  * Represents the responder utility.
@@ -38,23 +46,27 @@ export class Responder<T extends ResponderTarget> {
    * @param content The content.
    * @returns A message object.
    */
-  public send(content: ResponderContent) {
+  public send<
+    TComponents extends
+      ComponentRowBuilder.ComponentTypes = ComponentRowBuilder.ComponentTypes,
+  >(content: ResponderContent<TComponents>) {
     const { deferred, replied } = this.target;
+
+    content = isFunction(content)
+      ? Builder.build(new InteractionMessageBuilder<TComponents>(), content)
+      : content;
 
     if (deferred && !replied) {
       return this.target.editReply(content);
     }
 
-    if (this._isContentForSend(content)) {
-      if (replied) {
-        return this.target.followUp(content);
-      }
-
-      return this.target.reply({ ...content, fetchReply: true });
+    if (replied) {
+      return this.target.followUp(content);
     }
 
-    throw new Error("Cannot send message.", {
-      cause: { responder: this, content },
+    return this.target.reply({
+      ...(typeof content === "string" ? { content } : content),
+      fetchReply: true,
     });
   }
 
@@ -63,17 +75,33 @@ export class Responder<T extends ResponderTarget> {
    * @param content The content.
    * @returns A message object.
    */
-  public edit(content: ResponderContent) {
+  public edit<
+    TComponents extends
+      ComponentRowBuilder.ComponentTypes = ComponentRowBuilder.ComponentTypes,
+  >(content: ResponderContent<TComponents>) {
+    content = isFunction(content)
+      ? Builder.build(new InteractionMessageBuilder<TComponents>(), content)
+      : content;
+
     if (
       this.target.isChatInputCommand() ||
-      (this.target.deferred && this.target.replied) ||
-      this._isContentForSend(content)
+      (this.target.deferred && this.target.replied)
     ) {
       return this.target.editReply(content);
     }
 
     if (this.target.isMessageComponent()) {
-      return this.target.update({ ...content, fetchReply: true });
+      content =
+        typeof content === "string"
+          ? new InteractionMessageBuilder<TComponents>().setContent(content)
+          : content;
+
+      return this.target.update({
+        ...new UpdateInteractionMessageBuilder().apply(
+          () => content as unknown as UpdateInteractionMessageBuilder,
+        ),
+        fetchReply: true,
+      });
     }
 
     throw new Error("Cannot edit message.", {
@@ -88,11 +116,5 @@ export class Responder<T extends ResponderTarget> {
    */
   public async unsend() {
     return (await Result.fromAsync(this.target.deleteReply())).isOk();
-  }
-
-  private _isContentForSend(
-    content: ResponderContent,
-  ): content is InteractionReplyOptions {
-    return "flags" in content && content.flags !== "Ephemeral";
   }
 }

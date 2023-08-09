@@ -54,6 +54,8 @@ export class Responder<T extends ResponderTarget> {
 
     content = isFunction(content)
       ? Builder.build(new InteractionMessageBuilder<TComponents>(), content)
+      : typeof content === "string"
+      ? new InteractionMessageBuilder<TComponents>().setContent(content)
       : content;
 
     if (deferred && !replied) {
@@ -64,10 +66,7 @@ export class Responder<T extends ResponderTarget> {
       return this.target.followUp(content);
     }
 
-    return this.target.reply({
-      ...(typeof content === "string" ? { content } : content),
-      fetchReply: true,
-    });
+    return this.target.reply({ ...content, fetchReply: true });
   }
 
   /**

@@ -4,6 +4,7 @@ import {
   isFunction,
   isNullish,
   type Arr,
+  isNullOrUndefined,
 } from "@sapphire/utilities";
 import type {
   BitFieldResolvable,
@@ -172,7 +173,7 @@ export class ComponentRowBuilder<
     );
   }
 
-  protected get Constructor() {
+  public get Constructor() {
     const Constructors: Record<
       ComponentRowBuilder.ComponentTypes,
       Ctor<[], ComponentRowBuilder.Components>
@@ -283,6 +284,53 @@ abstract class BaseMessageBuilder<
     );
 
     return this;
+  }
+
+  public replaceComponentRow(
+    rowIndex: number,
+    type: TComponents,
+    rowCb: Builder.Callback<ComponentRowBuilder<TComponents>>,
+  ) {
+    (this.components ??= []).splice(
+      rowIndex,
+      1,
+      Builder.build(new ComponentRowBuilder(type), rowCb),
+    );
+
+    return this;
+  }
+
+  public replaceComponentRowComponent(
+    rowIndex: number,
+    componentIndex: number,
+    type: TComponents,
+    compCb: Builder.Callback<
+      ComponentRowBuilder.ComponentMappings[TComponents]
+    >,
+  ) {
+    const existingRow = (this.components ??= []).at(
+      rowIndex,
+    ) as ComponentRowBuilder<TComponents>;
+    if (isNullOrUndefined(existingRow))
+      throw new ReferenceError("Row not found.");
+
+    const component = existingRow.components.findIndex(
+      (_comp, idx) => idx === componentIndex,
+    );
+    if (component === -1) throw new ReferenceError("Component not found.");
+
+    return this.replaceComponentRow(rowIndex, type, (row) =>
+      row.setComponents(
+        ...existingRow.components.map((comp, idx) =>
+          idx !== componentIndex
+            ? comp
+            : Builder.build(
+                new row.Constructor() as ComponentRowBuilder.ComponentMappings[TComponents],
+                compCb,
+              ),
+        ),
+      ),
+    );
   }
 
   public removeComponentRow(rowIndex: number) {
